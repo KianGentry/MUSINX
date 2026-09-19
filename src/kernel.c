@@ -35,7 +35,7 @@ void kernel_main(void) {
     set_trap_vector(trap_vector);
     
     console_write("before trap\n");
-    __asm__ volatile(".word 0x00100073"); // ebreak (4 byte)
+    __asm__ volatile("ebreak"); // ebreak (4 byte)
     console_write("after trap\n");
 
     // sleep, wait for interrupt
