@@ -1,6 +1,8 @@
 .section .text.entry
+
 .globl _start
 .type _start, @function
+
 .extern kernel_main
 .extern __stack_top
 
@@ -17,4 +19,18 @@ _start:
     wfi
     # wait for interrupt in a loop
     j 1b
+
 .size _start, . - _start
+
+.section .text
+.align 2
+.globl trap_vector
+.type trap_vector, @function
+
+trap_vector:
+    csrr t0, sepc
+    addi t0, t0, 4
+    csrw sepc, t0
+    sret
+
+.size trap_vector, . - trap_vector
