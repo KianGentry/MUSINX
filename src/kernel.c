@@ -7,9 +7,20 @@ static void console_write(const char *text) {
     }
 }
 
+static void console_write_hex(unsigned long value) {
+    static const char hex_chars[] = "0123456789abcdef";
+    console_write("0x");
+
+    for (int shift = 60; shift >= 0; shift -= 4) {
+        unsigned long digit = (value >> shift) & 0xf;
+        sbi_console_put_char(hex_chars[digit]);
+    }
+    console_write("\n");
+}
+
 void trap_unhandled(unsigned long cause) {
-    (void)cause;
-    console_write("kernel: unexpected trap\n");
+    console_write("kernel: unexpected trap, scause: ");
+    console_write_hex(cause);
 
     for (;;) {
         wfi();
