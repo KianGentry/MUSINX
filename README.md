@@ -1,6 +1,6 @@
 ![image](docs/musinx-logo-1.png "MUSINX")
 ---
-A public-domain microkernel.
+A public domain microkernel.
 
 Currently designed for RISC-V, architecture asbtraction planned.
 
