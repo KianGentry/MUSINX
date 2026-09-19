@@ -1,6 +1,25 @@
 #ifndef RISCV_H
 #define RISCV_H
 
+// enter user function
+static inline void enter_user_mode(void (*entry)(void)) {
+    unsigned long status;
+
+    __asm__ volatile("csrr %0, sstatus" : "=r"(status));
+
+    status &= ~(1UL << 8); // clear SPP bit to enter user mode
+
+    // set the trap vector to the user entry point
+    __asm__ volatile(
+        "csrw sstatus, %0\n"
+        "csrw sepc, %1\n"
+        "sret"
+        :
+        : "r"(status), "r"(entry)
+        : "memory"
+    );
+}
+
 // ask SBI to output one character to console
 static inline long sbi_console_put_char(int character) {
     register unsigned long a0 __asm__("a0") = (unsigned long)character;

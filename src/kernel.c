@@ -7,6 +7,17 @@ static void console_write(const char *text) {
     }
 }
 
+// user mode test func
+static void user(void) {
+    __asm__ volatile(".word 0x00100073");
+
+    console_write("user: returned from trap\n");
+
+    for (;;) {
+        wfi();
+    }
+}
+
 static void console_write_hex(unsigned long value) {
     static const char hex_chars[] = "0123456789abcdef";
     console_write("0x");
@@ -29,14 +40,13 @@ void trap_unhandled(unsigned long cause) {
 
 void kernel_main(void) {
     console_write("MUSINX\n");
-    // sbi forward to debug console
-    // set trap vector
+
     console_write("set trap\n");
     set_trap_vector(trap_vector);
-    
-    console_write("before trap\n");
-    __asm__ volatile("ebreak"); // ebreak (4 byte)
-    console_write("after trap\n");
+
+    console_write("entering user mode\n");
+    enter_user_mode(user);
+    console_write("returned from user mode\n");
 
     // sleep, wait for interrupt
     for (;;) {
