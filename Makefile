@@ -36,7 +36,7 @@ build/trap.o: src/entry/trap.s | build
 build/main.o: src/main.c include/arch/riscv.h include/drivers/console.h include/trap.h | build
 	$(CC) $(CFLAGS) -c $< -o $@
 
-build/trap-c.o: src/trap.c include/arch/riscv.h include/drivers/console.h include/trap.h | build
+build/trap-c.o: src/trap.c include/arch/riscv.h include/drivers/console.h include/trap.h include/syscalls.h | build
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/console.o: src/drivers/console.c include/arch/riscv.h include/drivers/console.h | build
