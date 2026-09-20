@@ -1,6 +1,18 @@
 #include "arch/riscv.h"
 #include "trap.h"
 #include "drivers/console.h"
+#include "syscalls.h"
+
+static void user_putchar(char character) {
+    register unsigned long argument __asm__("a0") = character;
+    register unsigned long number __asm__("a7") = SYSCALL_PUTCHAR;
+    __asm__ volatile(
+        "ecall" 
+        : "+r"(argument)
+        : "r"(number) 
+        : "memory"
+    );
+}
 
 static inline void enter_user_mode(void (*entry)(void)) {
     unsigned long status;
@@ -24,10 +36,11 @@ static inline void enter_user_mode(void (*entry)(void)) {
 static void user(void) {
     __asm__ volatile(".word 0x00100073");
 
-    console_write("user: returned from trap\n");
+    user_putchar('H');
+    user_putchar('i');
+    user_putchar('\n');
 
     for (;;) {
-        wfi();
     }
 }
 
