@@ -10,7 +10,7 @@ Currently designed for RISC-V, architecture asbtraction planned.
 - qemu-extra
 - make
 - clang
-probably other stuff too... idk
+- probably other stuff too... idk
 
 ## Build / Boot
 
