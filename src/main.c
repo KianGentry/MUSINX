@@ -1,4 +1,4 @@
-#include "arch/riscv.h"
+#include "arch/riscv/riscv.h"
 #include "trap.h"
 #include "drivers/console.h"
 #include "syscalls.h"

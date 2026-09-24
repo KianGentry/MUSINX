@@ -1,4 +1,4 @@
-#include "arch/riscv.h"
+#include "arch/riscv/riscv.h"
 
 // ask SBI to output one character to console
 long sbi_console_put_char(int character) {

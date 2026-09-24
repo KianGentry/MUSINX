@@ -33,19 +33,19 @@ build/loader.o: src/entry/loader.s | build
 build/trap.o: src/entry/trap.s | build
 	$(CC) $(ASFLAGS) -c $< -o $@
 
-build/main.o: src/main.c include/arch/riscv.h include/drivers/console.h include/trap.h | build
+build/main.o: src/main.c include/arch/riscv/riscv.h include/drivers/console.h include/trap.h | build
 	$(CC) $(CFLAGS) -c $< -o $@
 
-build/trap-c.o: src/trap.c include/arch/riscv.h include/drivers/console.h include/trap.h include/syscalls.h | build
+build/trap-c.o: src/trap.c include/arch/riscv/riscv.h include/drivers/console.h include/trap.h include/syscalls.h | build
 	$(CC) $(CFLAGS) -c $< -o $@
 
-build/console.o: src/drivers/console.c include/arch/riscv.h include/drivers/console.h | build
+build/console.o: src/drivers/console.c include/arch/riscv/riscv.h include/drivers/console.h | build
 	$(CC) $(CFLAGS) -c $< -o $@
 
-build/riscv.o: src/arch/riscv.c include/arch/riscv.h | build
+build/riscv.o: src/arch/riscv/riscv.c include/arch/riscv/riscv.h | build
 	$(CC) $(CFLAGS) -c $< -o $@
 
-build/syscall.o: src/syscalls.c include/arch/riscv.h include/syscalls.h | build
+build/syscall.o: src/syscalls.c include/arch/riscv/riscv.h include/syscalls.h | build
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/kernel.elf: linker.ld $(OBJECTS)

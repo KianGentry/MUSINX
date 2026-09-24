@@ -1,5 +1,5 @@
 #include "syscalls.h"
-#include "arch/riscv.h"
+#include "arch/riscv/riscv.h"
 
 long syscall_dispatch(unsigned long number, unsigned long argument) {
     switch (number) {

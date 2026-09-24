@@ -1,4 +1,4 @@
-#include "arch/riscv.h"
+#include "arch/riscv/riscv.h"
 #include "drivers/console.h"
 
 // goes one character at a time writing to console, making string
