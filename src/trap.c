@@ -25,12 +25,17 @@ void trap_handle(struct trap_frame *frame) {
         return;
     }
 
-    trap_unhandled(frame->scause);
+    trap_unhandled(frame);
 }
 
-void trap_unhandled(unsigned long cause) {
-    console_write("kernel: unexpected trap, scause: ");
-    console_write_hex(cause);
+void trap_unhandled(struct trap_frame *frame) {
+    console_write("kernel: unexpected trap\n");
+    console_write("scause: ");
+    console_write_hex(frame->scause);
+    console_write("sepc: ");
+    console_write_hex(frame->sepc);
+    console_write("stval: ");
+    console_write_hex(frame->stval);
 
     for (;;) {
         wfi();

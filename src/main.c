@@ -2,8 +2,11 @@
 #include "trap.h"
 #include "drivers/console.h"
 #include "syscalls.h"
+#include "arch/riscv/paging.h"
 
-static void user_putchar(char character) {
+#define USER_TEXT __attribute__((section(".user.text")))
+
+static USER_TEXT void user_putchar(char character) {
     register unsigned long argument __asm__("a0") = character;
     register unsigned long number __asm__("a7") = SYSCALL_PUTCHAR;
     __asm__ volatile(
@@ -17,7 +20,7 @@ static void user_putchar(char character) {
 static inline void enter_user_mode(void (*entry)(void)) {
     unsigned long status;
     extern char __kernel_stack_top[];
-    extern char __stack_top[];
+    extern char __user_stack_top[];
 
     __asm__ volatile("csrr %0, sstatus" : "=r"(status));
 
@@ -32,7 +35,7 @@ static inline void enter_user_mode(void (*entry)(void)) {
         "sret"
         :
         : "r"(__kernel_stack_top), 
-        "r"(__stack_top), 
+        "r"(__user_stack_top), 
         "r"(status), 
         "r"(entry)
         : "memory"
@@ -41,7 +44,7 @@ static inline void enter_user_mode(void (*entry)(void)) {
 }
 
 // user mode test func
-static void user(void) {
+static USER_TEXT void user(void) {
 
     user_putchar('H');
     user_putchar('i');
@@ -52,10 +55,17 @@ static void user(void) {
 }
 
 void kernel_main(void) {
+    extern char __kernel_stack_top[];
     console_write("MUSINX\n");
 
     console_write("set trap\n");
     set_trap_vector(trap_vector);
+
+    // temp sscratch initialisation
+    __asm__ volatile("csrw sscratch, %0" : : "r"(__kernel_stack_top) : "memory");
+
+    console_write("start paging\n");
+    paging_init();
 
     console_write("entering user mode\n");
     enter_user_mode(user);

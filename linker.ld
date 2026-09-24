@@ -34,6 +34,20 @@ SECTIONS
 	. += 16384;
 	__stack_top = .;
 
+	. = ALIGN(0x200000);
+	__user_text_start = .;
+
+	.user.text : ALIGN(4) {
+		*(.user.text)
+	}
+
+	__user_text_end = .;
+
+	. = ALIGN(0x200000);
+	__user_stack_bottom = .;
+	. += 4096;
+	__user_stack_top = .;
+
 	/DISCARD/ : {
 		*(.eh_frame .comment)
 		*(.note .note.*)

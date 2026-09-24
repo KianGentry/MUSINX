@@ -9,6 +9,6 @@ struct trap_frame {
 };
 
 void trap_handle(struct trap_frame *frame);
-void trap_unhandled(unsigned long cause);
+void trap_unhandled(struct trap_frame *frame);
 
 #endif // TRAP_H
