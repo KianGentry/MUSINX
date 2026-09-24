@@ -16,6 +16,8 @@ static void user_putchar(char character) {
 
 static inline void enter_user_mode(void (*entry)(void)) {
     unsigned long status;
+    extern char __kernel_stack_top[];
+    extern char __stack_top[];
 
     __asm__ volatile("csrr %0, sstatus" : "=r"(status));
 
@@ -23,18 +25,23 @@ static inline void enter_user_mode(void (*entry)(void)) {
 
     // set the trap vector to the user entry point
     __asm__ volatile(
-        "csrw sstatus, %0\n"
-        "csrw sepc, %1\n"
+        "csrw sscratch, %0\n"
+        "mv sp, %1\n"
+        "csrw sstatus, %2\n"
+        "csrw sepc, %3\n"
         "sret"
         :
-        : "r"(status), "r"(entry)
+        : "r"(__kernel_stack_top), 
+        "r"(__stack_top), 
+        "r"(status), 
+        "r"(entry)
         : "memory"
     );
+    __builtin_unreachable();
 }
 
 // user mode test func
 static void user(void) {
-    __asm__ volatile(".word 0x00100073");
 
     user_putchar('H');
     user_putchar('i');

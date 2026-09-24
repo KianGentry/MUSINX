@@ -5,11 +5,12 @@
 
 .extern kernel_main
 .extern __stack_top
+.extern __kernel_stack_top
 
 # set stack, jump to kernel_main
 _start:
     # start at the top of stack
-    la sp, __stack_top
+    la sp, __kernel_stack_top
 
     # kernel.c
     call kernel_main

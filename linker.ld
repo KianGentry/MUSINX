@@ -25,6 +25,11 @@ SECTIONS
 	}
 
 	. = ALIGN(16);
+	__kernel_stack_bottom = .;
+	. += 4096;
+	__kernel_stack_top = .;
+
+	. = ALIGN(16);
 	__stack_bottom = .;
 	. += 16384;
 	__stack_top = .;

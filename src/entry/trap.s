@@ -19,13 +19,18 @@
 # 272(sp), stval
 
 trap_vector:
+    # sp = interrupted stack
+    # sscratch = __kernel_stack_top
+    # do NOT allocate trap frame onto user stack... or you DIE
+    csrrw sp, sscratch, sp
+
     # -288: space for 32 registers + 3 csrs
     addi sp, sp, -288
 
     # save t0 
     sd t0, 40(sp)
 
-    addi t0, sp, 288
+    csrr t0, sscratch
     sd t0, 16(sp)  # save stack pointer at sp+16
 
     # save every gp register (except x0)
@@ -109,8 +114,16 @@ trap_vector:
     ld t0, 256(sp)
     csrw sepc, t0
 
-    # restore stack pointer and return from trap
-    ld sp, 16(sp)
+    # restore user t0 and switch stacks
+    ld t0, 40(sp)
+    
+    # remove frame, sp = __kernel_stack_top
+    addi sp, sp, 288
+
+    # exchange back:
+    # sp = user stack
+    # sscratch = __kernel_stack_top
+    csrrw sp, sscratch, sp
     sret
 
 .size trap_vector, . - trap_vector

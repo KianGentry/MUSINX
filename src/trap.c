@@ -4,6 +4,13 @@
 #include "syscalls.h"
 
 void trap_handle(struct trap_frame *frame) {
+/*
+    console_write("trap scause: ");
+    console_write_hex(frame->scause);
+    console_write("sepc: ");
+    console_write_hex(frame->sepc);
+    console_write("\n");
+*/
     if (frame->scause == 8) {
         unsigned long number = frame->registers[17]; // a7 is the 18th register (index 17)
         unsigned long argument = frame->registers[10]; // a0 is the 11th register (index 10)
