@@ -31,9 +31,9 @@ static inline void write_satp(unsigned long value) {
 
     __asm__ volatile("csrw satp, %0\n"
         "sfence.vma\n"
-                    :
-                    : "r"(value)
-                    : "memory");
+        :
+        : "r"(value)
+        : "memory");
 }
 
 void paging_init(void) {

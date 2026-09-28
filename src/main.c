@@ -17,6 +17,13 @@ static USER_TEXT void user_putchar(char character) {
     );
 }
 
+static USER_TEXT void user_read_kernel_memory(void) {
+    volatile unsigned long *kernel_word =
+        (volatile unsigned long *)0x80200000UL;
+
+    (void)*kernel_word;
+}
+
 static inline void enter_user_mode(void (*entry)(void)) {
     unsigned long status;
     extern char __kernel_stack_top[];
@@ -50,8 +57,7 @@ static USER_TEXT void user(void) {
     user_putchar('i');
     user_putchar('\n');
 
-    for (;;) {
-    }
+    user_read_kernel_memory();
 }
 
 void kernel_main(void) {

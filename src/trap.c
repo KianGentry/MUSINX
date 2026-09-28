@@ -25,6 +25,11 @@ void trap_handle(struct trap_frame *frame) {
         return;
     }
 
+    if (frame->scause == 12 || frame->scause == 13 || frame->scause == 15) {
+        console_write("kernel: page fault\n");
+        trap_unhandled(frame);
+    }
+
     trap_unhandled(frame);
 }
 
